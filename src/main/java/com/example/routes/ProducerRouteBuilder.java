@@ -10,15 +10,15 @@ public class ProducerRouteBuilder extends RouteBuilder {
 
         AtomicInteger counter = new AtomicInteger(0);
 
-        from("timer:timerProducer?period=#property:timerPeriod")
+        from("timer:timerProducer?period={{timerPeriod}}")
             .id("paho-producer")
             .process(exchange -> {
                 exchange.getIn().setBody("messageId="+counter.getAndIncrement());
             })
             .log(INFO, "Sending: ${body}")
-            .to("paho-mqtt5:#property:topic"
-                +"?brokerUrl=#property:mqtt-servers"
-                +"&clientId=$property:clientId"
+            .to("paho-mqtt5:{{topic}}"
+                +"?brokerUrl={{mqtt-servers}}"
+                +"&clientId={{clientId}}"
                 +"&qos=1");
     }
 }
